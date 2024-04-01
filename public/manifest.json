@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "PinGPT allows you to easily pin and reference important ChatGPT conversations and make long chats readily accessible.",
   "icons": {
-    "128": "images/icon-128.png"
+    "128": "icon-128.png"
   },
   "permissions": ["activeTab"],
   "action": {
