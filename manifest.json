@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "PinGPT",
+  "version": "1.0",
+  "description": "PinGPT allows you to easily pin and reference important ChatGPT conversations and make long chats readily accessible.",
+  "icons": {
+    "128": "images/icon-128.png"
+  },
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "popup.html"
+
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["pin.png", "pin_white.png"],
+      "matches": ["https://chat.openai.com/*"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["contentScript.js"],
+      "css": ["style.css"]
+    }
+  ]
+}

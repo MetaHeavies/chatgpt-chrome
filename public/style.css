@@ -1,0 +1,120 @@
+/* Styles the container that holds pinned chat divs */
+.sticky-container {
+  position: fixed;
+  padding: 56px 8px;
+  top: 0;
+  right: -20vw; /* Initially off-screen to slide in */
+  width: 20vw; /* Sidebar width */
+  height: 100%; /* Full viewport height */
+  overflow-y: auto; /* Enable scroll for overflow */
+  transition: right 0.25s ease-in-out; /* Smooth slide-in effect */
+  z-index: 1000; /* High z-index to overlay content */
+}
+
+/* Makes the sticky container visible by moving it into view */
+.sticky-container.visible {
+  right: 0;
+}
+
+/* Styles the area that triggers showing the sticky container */
+.hover-intent-area {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 15vw; /* Width of the hover-sensitive area */
+  height: 100%; /* Full viewport height */
+  z-index: 999; /* Slightly below the sticky container to allow interaction */
+}
+
+/* Ensures that agent-turn divs have a top margin in scroll views */
+.agent-turn {
+  scroll-margin-top: 56px; /* Space above the element when scrolled into view */
+}
+
+/* Styles the pin button */
+.pin-button {
+  position: absolute;
+  left: 86px;
+  top: -2px;
+  padding: 2px 8px;
+  padding-left: 19px;
+  border-radius: 2px;
+  font-size: 12px;
+  z-index: 0;
+  background-color: rgba(162,227,204,1);
+  color: rgba(29,64,51,1);
+  background-position: 6px 9px;
+  background-repeat: no-repeat;
+  background-size: 8px;
+  transition: background-color 0.2s ease-in-out; /* Smooth color transition */
+}
+
+/* Hover effect for the pin button */
+.pin-button:hover {
+  background-color: rgba(135,210,183,1);
+}
+
+/* Styles for the .agent-turn div when highlighted */
+.agent-turn.highlight {
+  background-color: rgba(135,210,183,0.4);
+}
+
+/* Styles for pinned state of the button */
+.pinned, .pinned:hover {
+  background-color: rgb(67, 67, 67);
+  color: #c3c3c3;
+  pointer-events: none; /* Disables further interaction */
+}
+
+/* Handles the transition to fade the .agent-turn background color */
+.agent-turn.fade-out {
+  transition: background-color 2s ease-out;
+  background-color: white; /* Fades back to white */
+}
+
+/* Styles for the individual chat holder within the sticky container */
+.chat-holder {
+  display: flex;
+  background-color: rgba(0,0,0,0.7);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+  color: #f5f5f5;
+  backdrop-filter: blur(10px); /* Soft blur effect */
+  transition: background-color 0.25s ease-in-out;
+  cursor: pointer; /* Indicates it's clickable */
+}
+
+/* Hover effect for chat holder */
+.chat-holder:hover {
+  background-color: rgba(0,0,0,0.65);
+}
+
+/* Styles for the paragraph inside the chat holder */
+.chat-holder p {
+  font-size: 13px;
+  padding: 12px;
+  flex: 1; /* Takes up the full width of its container */
+}
+
+/* Styles for the remove button */
+.remove-button {  
+  width: 32px;
+  background-color: #000;
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+  border: none; /* Removes default border */
+}
+
+/* Creates a fade effect at the bottom of chat holder paragraphs */
+.chat-holder p:after {
+  content: "";
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  height: 50px;
+  background: rgb(0,0,0);
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+}
