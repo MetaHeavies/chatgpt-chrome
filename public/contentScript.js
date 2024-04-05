@@ -1,7 +1,21 @@
+// Initialize variables
 let hideSidebarTimeout;
 let stickyContainer;
 let hoverIntentArea;
-let pinnedChats = new Set();
+
+// Use an object to track pinned chats per conversation
+let pinnedChats = {};
+
+// Immediately invoked function to set up the UI and load pins for the current conversation
+(function initialize() {
+    createStickyContainerAndHoverIntent();
+    loadPinsForCurrentConversation();
+})();
+
+// Extracts the current conversation ID from the URL
+function getCurrentConversationId() {
+    return new URL(window.location.href).pathname.split('/').pop();
+}
 
 /**
  * Initializes the sticky container and hover intent area
@@ -64,19 +78,29 @@ function showStickyContainerTemporarily() {
  * @param {HTMLElement} div - The chat div to be pinned.
  */
 function pinDiv(div) {
-    if (!stickyContainer || !hoverIntentArea) {
-        createStickyContainerAndHoverIntent();
-    }
-
+    const currentConversationId = getCurrentConversationId();
     let originalDivId = div.getAttribute('data-original-id');
+    
     if (!originalDivId) {
         originalDivId = `chat-${Date.now()}`;
         div.setAttribute('data-original-id', originalDivId);
     }
 
-    if (pinnedChats.has(originalDivId)) {
-        return; // Avoids pinning the same chat more than once.
+    // Avoid pinning the same chat again in the same conversation
+    if (pinnedChats[currentConversationId]?.includes(originalDivId)) {
+        return;
     }
+
+    // Add chat ID to the pinnedChats object and save
+    if (!pinnedChats[currentConversationId]) {
+        pinnedChats[currentConversationId] = [];
+    }
+    pinnedChats[currentConversationId].push(originalDivId);
+    savePinsToLocalStorage();
+
+    // if (pinnedChats.has(originalDivId)) {
+    //     return; // Avoids pinning the same chat more than once.
+    // }
 
     pinnedChats.add(originalDivId);
     const clonedDiv = div.cloneNode(true);
@@ -165,6 +189,13 @@ function addPinButtonToDivs() {
     });
 }
 
+// Saves the pinnedChats object to Chrome's local storage
+function savePinsToLocalStorage() {
+    chrome.storage.local.set({pinnedChats: pinnedChats}, function() {
+        console.log('Pinned chats saved.');
+    });
+}
+
 // Observes the document for new chat divs to add 'Pin' buttons dynamically.
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -174,14 +205,12 @@ const observer = new MutationObserver((mutations) => {
     });
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
+function removePinnedChat(chatId) {
+    // Your implementation for removing a pinned chat,
+    // including updating the pinnedChats object and calling savePinsToLocalStorage
+}
 
-// Toggles the visibility of the sticky container on 'p' keydown.
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'p') {
-        toggleContainer();
-    }
-});
+observer.observe(document.body, { childList: true, subtree: true });
 
 // Initial call to add 'Pin' buttons to all agent-turn divs.
 addPinButtonToDivs();
